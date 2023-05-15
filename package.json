@@ -18,8 +18,8 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start:frontend": "react-scripts start",
-    "start:backend": "nodemon server.js",
+    "start:fe": "react-scripts start",
+    "start:be": "nodemon server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
