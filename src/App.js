@@ -1,11 +1,17 @@
 import "./App.css";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [value, setValue] = useState("");
+  const [message, setMessage] = useState(null);
+  const [chat, setChat] = useState([]);
+  const [title, setTitle] = useState([]);
+
   const getMessages = async () => {
     const options = {
       method: "POST",
       body: JSON.stringify({
-        message: "hello",
+        message: value,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -17,11 +23,19 @@ function App() {
         options
       );
       const data = await response.json();
-      console.log(data)
+      // console.log(data)
+      setMessage(data.choices[0].message);
     } catch (e) {
       console.error(e);
     }
   };
+
+  useEffect( () => {
+    console.log(title, value, message)
+    if (!title && value && message) {
+      setTitle(value)
+    }
+  }, [message, title]);
 
   return (
     <div className="App">
@@ -39,7 +53,11 @@ function App() {
         <ul className="feed">
           <div className="bottom-section">
             <div className="input-container">
-              <input type="text" />
+              <input
+                type="text"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
               <div id="submit" onClick={getMessages}>
                 {">"}
               </div>
