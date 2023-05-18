@@ -6,8 +6,8 @@ function App() {
   const [message, setMessage] = useState(null);
   const [chat, setChat] = useState([]);
   const [title, setTitle] = useState("");
-  const [msgs, setMsgs] = useState({}) 
-  const test = [{title: [{role: "", content: ""}]}]
+  const [msgs, setMsgs] = useState({});
+  const test = [{ title: [{ role: "", content: "" }] }];
 
   const createNewChat = () => {
     setMessage(null);
@@ -24,7 +24,7 @@ function App() {
   const getMessages = async () => {
     const options = {
       method: "POST",
-      body: JSON.stringify({ role: "user", content: value }),
+      body: JSON.stringify([{ role: "user", content: value }]),
       // body: JSON.stringify({ message: value }),
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +36,11 @@ function App() {
         options
       );
       const data = await response.json();
-      console.log(data)
+      console.log(data);
+      // setMsgs((title, data) => {
+      //   return {...title: [data.choices[0].message, ...message?.title]}
+      //   })
+
       setMessage(data.choices[0].message);
     } catch (e) {
       console.error(e);

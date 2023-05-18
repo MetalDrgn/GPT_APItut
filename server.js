@@ -16,7 +16,7 @@ app.post("/completions", async (req, res) => {
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
-      messages: [req.body ],
+      messages: req.body,
       // messages: [{ role: "user", content: req.body.message }],
     }),
   };
@@ -25,8 +25,8 @@ app.post("/completions", async (req, res) => {
       "https://api.openai.com/v1/chat/completions",
       options
     );
-    const data = await response.json()
-    res.send(data)
+    const data = await response.json();
+    res.send(data);
   } catch (e) {
     console.error(e);
   }
