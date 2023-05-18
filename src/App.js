@@ -43,27 +43,27 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    console.log(title, value, message);
-    if (!title && value && message) {
-      setTitle(value);
-    }
-    if (title && value && message) {
-      setChat((chat) => [
-        ...chat,
-        {
-          title: title,
-          role: "user",
-          content: value,
-        },
-        {
-          title: title,
-          role: message.role,
-          content: message.content,
-        },
-      ]);
-    }
-  }, [message, title]);
+  // useEffect(() => {
+  //   console.log(title, value, message);
+  //   if (!title && value && message) {
+  //     setTitle(value);
+  //   }
+  //   if (title && value && message) {
+  //     setChat((chat) => [
+  //       ...chat,
+  //       {
+  //         title: title,
+  //         role: "user",
+  //         content: value,
+  //       },
+  //       {
+  //         title: title,
+  //         role: message.role,
+  //         content: message.content,
+  //       },
+  //     ]);
+  //   }
+  // }, [message, title]);
 
   // console.log(chat);
 
