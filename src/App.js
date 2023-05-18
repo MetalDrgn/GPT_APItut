@@ -6,6 +6,8 @@ function App() {
   const [message, setMessage] = useState(null);
   const [chat, setChat] = useState([]);
   const [title, setTitle] = useState("");
+  const [msgs, setMsgs] = useState({}) 
+  const test = [{title: [{role: "", content: ""}]}]
 
   const createNewChat = () => {
     setMessage(null);
@@ -14,17 +16,16 @@ function App() {
   };
 
   const handleClick = (uniqueTitle) => {
-    setTitle(uniqueTitle)
+    setTitle(uniqueTitle);
     setMessage(null);
     setValue("");
-  }
+  };
 
   const getMessages = async () => {
     const options = {
       method: "POST",
-      body: JSON.stringify({
-        message: value,
-      }),
+      body: JSON.stringify({ role: "user", content: value }),
+      // body: JSON.stringify({ message: value }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -35,7 +36,7 @@ function App() {
         options
       );
       const data = await response.json();
-      // console.log(data)
+      console.log(data)
       setMessage(data.choices[0].message);
     } catch (e) {
       console.error(e);
@@ -64,11 +65,11 @@ function App() {
     }
   }, [message, title]);
 
-  console.log(chat);
+  // console.log(chat);
 
   const currentChat = chat.filter((chat) => chat.title === title);
   const uniqueTitles = Array.from(new Set(chat.map((chat) => chat.title)));
-  console.log(uniqueTitles);
+  // console.log(uniqueTitles);
 
   return (
     <div className="App">
@@ -76,7 +77,9 @@ function App() {
         <button onClick={createNewChat}>+ New chat</button>
         <ul className="history">
           {uniqueTitles.map((uniqueTitle, index) => (
-            <li key={index} onClick={ () => handleClick(uniqueTitle)}>{uniqueTitle}</li>
+            <li key={index} onClick={() => handleClick(uniqueTitle)}>
+              {uniqueTitle}
+            </li>
           ))}
         </ul>
         <nav>
@@ -84,8 +87,8 @@ function App() {
         </nav>
       </section>
       <section className="main">
-        <h1>API_GPT</h1>
-        {/* {!title && <h1>API_GPT</h1>} */}
+        {/* <h1>API_GPT</h1> */}
+        <h1>{title || "API_GPT"}</h1>
         <ul className="feed">
           {currentChat?.map((message, index) => (
             <li key={index}>
