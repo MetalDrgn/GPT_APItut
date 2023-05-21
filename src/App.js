@@ -2,19 +2,27 @@ import "./App.css";
 import { useState, useEffect } from "react";
 
 function App() {
+  // Value of what's in the input box.
   const [value, setValue] = useState("");
+  // Stores the messages - old.
   const [message, setMessage] = useState(null);
-  const [chat, setChat] = useState([]);
-  const [title, setTitle] = useState("");
-  const [msgs, setMsgs] = useState({});
-  const test = [{ title: [{ role: "", content: "" }] }];
 
+  const [chat, setChat] = useState([]);
+  // Sets the title of the chat. Created from first prompt submitted.
+  const [title, setTitle] = useState("");
+  // New chat storage
+  const [msgs, setMsgs] = useState({});
+  // Temp test
+  const test = { title: [{ role: "", content: "" }] };
+
+  // Start new chat
   const createNewChat = () => {
     setMessage(null);
     setValue("");
     setTitle("");
   };
 
+  // Unique titles on the left.
   const handleClick = (uniqueTitle) => {
     setTitle(uniqueTitle);
     setMessage(null);
@@ -36,10 +44,40 @@ function App() {
         options
       );
       const data = await response.json();
+      if (data['error']) {
+        console.error(data['error'].message)
+        return
+      }
+      if (!title && value) {
+        setTitle(value)
+      }
       console.log(data);
-      // setMsgs((title, data) => {
-      //   return {...title: [data.choices[0].message, ...message?.title]}
-      //   })
+
+      // Trying to create Object with titles with array of messages for each title.
+      // setMsgs((value, data) => {
+      let runonce = false
+      setMsgs((m) => {
+        if (runonce) {
+          runonce = false
+          return m
+        } else {runonce = true}
+        let temp = title ? title : value
+        if (m[temp]) {
+          m[temp] = [...m[temp],data.choices[0].message]
+          return m
+          // return m[temp].push(data.choices[0].message)
+        } else {
+          return Object.assign(m, {[temp]: [data.choices[0].message]})
+        }
+      })
+
+        // if (chat[Object.keys(e)[0]]) {
+        //   chat[Object.keys(e)[0]] = [...chat[Object.keys(chat)[0]], ...e[Object.keys(e)[0]]] 
+        // } else {
+        //   chat = Object.assign(chat,e)
+        // }
+        // return {...title: [data.choices[0].message, ...message?.title]}
+
 
       setMessage(data.choices[0].message);
     } catch (e) {
@@ -47,6 +85,7 @@ function App() {
     }
   };
 
+  // ***Removing unneeded useEffect
   // useEffect(() => {
   //   console.log(title, value, message);
   //   if (!title && value && message) {
@@ -68,10 +107,12 @@ function App() {
   //     ]);
   //   }
   // }, [message, title]);
-
   // console.log(chat);
 
+  // Obsolete get of chats under specific title.
   const currentChat = chat.filter((chat) => chat.title === title);
+
+  // Obsolete get of unique titles.
   const uniqueTitles = Array.from(new Set(chat.map((chat) => chat.title)));
   // console.log(uniqueTitles);
 
