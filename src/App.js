@@ -1,5 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
+import {v4 as uuidv4} from 'uuid';
 
 function App() {
   // Value of what's in the input box.
@@ -12,14 +13,17 @@ function App() {
   const [title, setTitle] = useState("");
   // New chat storage
   const [msgs, setMsgs] = useState({});
+  // 
+  const [id, setId] = useState("")
   // Temp test
-  const test = { title: [{ role: "", content: "" }] };
+  // const test = { title: [{ role: "", content: "" }] };
 
   // Start new chat
   const createNewChat = () => {
     setMessage(null);
     setValue("");
     setTitle("");
+    setId("")
   };
 
   // Unique titles on the left.
@@ -48,36 +52,30 @@ function App() {
         console.error(data['error'].message)
         return
       }
+      let newId = uuidv4()
       if (!title && value) {
         setTitle(value)
+        setId(newId)
       }
       console.log(data);
 
-      // Trying to create Object with titles with array of messages for each title.
-      // setMsgs((value, data) => {
       let runonce = false
+      // Trying to create Object with titles with array of messages for each title.
       setMsgs((m) => {
+        // make sure it only runs once. Ran into it running twice causing duplication
         if (runonce) {
           runonce = false
           return m
         } else {runonce = true}
-        let temp = title ? title : value
+        // setup for object. ex {id1: {title: [{role: role1, content: message1}, {role: role2, content: message2}]}}
+        let temp = id ? id : newId
         if (m[temp]) {
-          m[temp] = [...m[temp],data.choices[0].message]
+          m[temp][title || value] = [...m[temp][title || value],data.choices[0].message]
           return m
-          // return m[temp].push(data.choices[0].message)
         } else {
-          return Object.assign(m, {[temp]: [data.choices[0].message]})
+          return Object.assign(m, {[temp]: {[title || value]:[data.choices[0].message]}})
         }
       })
-
-        // if (chat[Object.keys(e)[0]]) {
-        //   chat[Object.keys(e)[0]] = [...chat[Object.keys(chat)[0]], ...e[Object.keys(e)[0]]] 
-        // } else {
-        //   chat = Object.assign(chat,e)
-        // }
-        // return {...title: [data.choices[0].message, ...message?.title]}
-
 
       setMessage(data.choices[0].message);
     } catch (e) {
@@ -85,7 +83,7 @@ function App() {
     }
   };
 
-  // ***Removing unneeded useEffect
+  // ***Removing unneeded useEffect. need to extract some functionality first
   // useEffect(() => {
   //   console.log(title, value, message);
   //   if (!title && value && message) {
