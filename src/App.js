@@ -18,8 +18,6 @@ function App() {
   const [id, setId] = useState("")
   // creates a list of titles for history.
   const [uniqueTitles, setUniqueTitles] = useState([])
-  // Temp test
-  // const test = { title: [{ role: "", content: "" }] };
 
   // Start new chat
   const createNewChat = () => {
@@ -43,7 +41,6 @@ function App() {
       body: JSON.stringify(
         msgs[id] ? [...msgs[id].chat,{ role: "user", content: value }] : [{ role: "user", content: value }]
         ),
-      // body: JSON.stringify([{ role: "user", content: value }]),
       headers: {
         "Content-Type": "application/json",
       },
@@ -74,10 +71,10 @@ function App() {
           runonce = false
           return m
         } else {runonce = true}
-
         
-        // Can probably take out temp and just have it be ID since I added an ID to the initial state.
+        // Can probably take out temp and just have it be ID since I added an ID to the initial state. Holding for now...
         let temp = id ? id : newId
+
         // setup for object. 
         // ex {id1: {title:title, chat:[{role: role1, content: message1}, {role: role2, content: message2}]}}
         if (m[temp]) {
@@ -122,13 +119,8 @@ function App() {
   // }, [message, title]);
   // console.log(chat);
 
-  // Obsolete get of chats under specific title.
   // const currentChat = chat.filter((chat) => chat.title === title);
   const currentChat = msgs[id]?.chat;
-
-  // Obsolete get of unique titles.
-  // const uniqueTitles = Array.from(new Set(chat.map((chat) => chat.title)));
-  // console.log(uniqueTitles);
 
   return (
     <div className="App">
