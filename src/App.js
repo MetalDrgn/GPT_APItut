@@ -62,6 +62,7 @@ function App() {
       if (!title && value) {
         setTitle(value)
         setId(newId)
+        setUniqueTitles(t => [...t, newId])
       }
       console.log(data);
       
@@ -74,11 +75,11 @@ function App() {
           return m
         } else {runonce = true}
 
-        // setup for object. 
-        // ex {id1: {title: [{role: role1, content: message1}, {role: role2, content: message2}]}}
-        // ex {id1: {title:title, chat:[{role: role1, content: message1}, {role: role2, content: message2}]}}
+        
         // Can probably take out temp and just have it be ID since I added an ID to the initial state.
         let temp = id ? id : newId
+        // setup for object. 
+        // ex {id1: {title:title, chat:[{role: role1, content: message1}, {role: role2, content: message2}]}}
         if (m[temp]) {
           m[temp].chat = [...m[temp].chat,{ role: "user", content: value },data.choices[0].message]
           // m[temp][title || value] = [...m[temp][title || value],{ role: "user", content: value },data.choices[0].message]
@@ -88,8 +89,10 @@ function App() {
         }
       })
       // need this to list title names. Need to also change to object to get ID and name for list.
-      setUniqueTitles(Array.from(Object.keys(msgs)));
+      // if (msgs.id) {setUniqueTitles(t => [...t, id])}
+      // setUniqueTitles(Array.from(Object.keys(msgs)));
       setMessage(data.choices[0].message);
+      setValue("")
     } catch (e) {
       console.error(e);
     }
@@ -130,7 +133,10 @@ function App() {
   return (
     <div className="App">
       <section className="side-bar">
+        {/* new chat button */}
         <button onClick={createNewChat}>+ New chat</button>
+
+        {/* history list */}
         <ul className="history">
           {uniqueTitles.map((uniqueTitle, index) => (
             <li key={index} onClick={() => handleClick(uniqueTitle)}>
@@ -138,11 +144,13 @@ function App() {
             </li>
           ))}
         </ul>
+        
         <nav>
           <p>Experimental</p>
         </nav>
       </section>
       <section className="main">
+        {/* title */}
         <h1>{title || "API_GPT"}</h1>
         <ul className="feed">
           {currentChat?.map((message, index) => (
